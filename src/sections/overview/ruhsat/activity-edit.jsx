@@ -81,7 +81,7 @@ export function ActivityEditForm({ currentSchema }) {
       });
 
       if (!response.ok) {
-        toast.error('Hata!');
+        toast.error('Lütfen tüm alanları doldurup tekrar deneyeniz!');
         return;
       }
 
@@ -90,7 +90,7 @@ export function ActivityEditForm({ currentSchema }) {
         window.location.href = '/dashboard/permit';
       }, 1000);
     } catch (error) {
-      toast.error(error);
+      toast.error('Lütfen tüm alanları doldurup tekrar deneyeniz!');
     }
   });
 
