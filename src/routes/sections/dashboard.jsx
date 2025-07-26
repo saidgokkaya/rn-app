@@ -28,6 +28,7 @@ const AccountChangePasswordPage = lazy(
 //App
 const RuhsatPage = lazy(() => import('src/pages/ruhsat'));
 const ActivityPage = lazy(() => import('src/pages/ruhsat/activity'));
+const ClassPage = lazy(() => import('src/pages/ruhsat/class'));
 const NumaratajPage = lazy(() => import('src/pages/numarataj'));
 const LogPage = lazy(() => import('src/pages/log'));
 
@@ -81,7 +82,7 @@ export const dashboardRoutes = [
           { path: ':id/edit', element: (<RuhsatPage />) },
           { path: 'activity', element: (<ActivityPage />) },
           { path: 'warehouse', element: (<RuhsatPage />) },
-          { path: 'class', element: (<RuhsatPage />) },
+          { path: 'class', element: (<ClassPage />) },
         ],
       },
       {
