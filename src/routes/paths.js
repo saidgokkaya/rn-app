@@ -29,7 +29,14 @@ export const paths = {
   // DASHBOARD
   dashboard: {
     root: ROOTS.DASHBOARD,
-    permit: `${ROOTS.DASHBOARD}/permit`,
+    permit: {
+      root: `${ROOTS.DASHBOARD}/permit`,
+      new: `${ROOTS.DASHBOARD}/permit/new`,
+      edit: (id) => `${ROOTS.DASHBOARD}/permit/${id}/edit`,
+      activity: `${ROOTS.DASHBOARD}/permit/activity`,
+      warehouse: `${ROOTS.DASHBOARD}/permit/warehouse`,
+      class: `${ROOTS.DASHBOARD}/permit/class`
+    },
     numbering: {
       root: `${ROOTS.DASHBOARD}/numbering`,
       common_area: `${ROOTS.DASHBOARD}/numbering/common-areas`,

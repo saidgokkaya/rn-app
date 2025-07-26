@@ -26,7 +26,7 @@ import { CustomPopover } from 'src/components/custom-popover';
 
 // ----------------------------------------------------------------------
 
-export function UserTableRow({ row, selected, editHref, onSelectRow, onDeleteRow }) {
+export function UseTableRow({ row, selected, editHref, onSelectRow, onDeleteRow }) {
   const [currentRow, setCurrentRow] = useState(row);
   const menuActions = usePopover();
   const confirmDialog = useBoolean();
@@ -161,16 +161,6 @@ export function UserTableRow({ row, selected, editHref, onSelectRow, onDeleteRow
           >
             {currentRow.isActive}
           </Label>
-        </TableCell>
-
-        <TableCell>
-          <Button
-            variant="outlined"
-            color={currentRow.isActive === 'Aktif' ? 'error' : 'success'}
-            onClick={handleStatusChange}
-          >
-            {currentRow.isActive === 'Aktif' ? 'Pasif Yap' : 'Aktif Yap'}
-          </Button>
         </TableCell>
 
         <TableCell>

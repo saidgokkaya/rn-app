@@ -38,9 +38,9 @@ import {
   TablePaginationCustom,
 } from 'src/components/table';
 
-import { UserTableRow } from '../user-table-row';
-import { UserTableToolbar } from '../user-table-toolbar';
-import { UserTableFiltersResult } from '../user-table-filters-result';
+import { UseTableRow } from '../table-row';
+import { TableToolbar } from '../table-toolbar';
+import { TableFiltersResult } from '../table-filters-result';
 
 // ----------------------------------------------------------------------
 
@@ -52,7 +52,6 @@ const TABLE_HEAD = [
   { id: 'title', label: 'Pozisyon', width: 180 },
   { id: 'dateOfBirth', label: 'Doğum Tarihi', width: 200 },
   { id: 'isActive', label: 'Durum', width: 100 },
-  { id: '', width: 100 },
   { id: '', width: 88 },
 ];
 
@@ -227,7 +226,7 @@ export function RuhsatListView() {
             <>
               <Button
                 component={RouterLink}
-                href={paths.dashboard.user.new}
+                href={paths.dashboard.permit.activity}
                 variant="contained"
                 startIcon={<Iconify icon="mingcute:add-line" />}
               >
@@ -235,7 +234,7 @@ export function RuhsatListView() {
               </Button>
               <Button
                 component={RouterLink}
-                href={paths.dashboard.user.new}
+                href={paths.dashboard.permit.class}
                 variant="contained"
                 startIcon={<Iconify icon="mingcute:add-line" />}
               >
@@ -243,7 +242,7 @@ export function RuhsatListView() {
               </Button>
               <Button
                 component={RouterLink}
-                href={paths.dashboard.user.new}
+                href={paths.dashboard.permit.warehouse}
                 variant="contained"
                 startIcon={<Iconify icon="mingcute:add-line" />}
               >
@@ -251,7 +250,7 @@ export function RuhsatListView() {
               </Button>
               <Button
                 component={RouterLink}
-                href={paths.dashboard.user.new}
+                href={paths.dashboard.permit.new}
                 variant="contained"
                 startIcon={<Iconify icon="mingcute:add-line" />}
               >
@@ -300,13 +299,13 @@ export function RuhsatListView() {
             ))}
           </Tabs>
 
-          <UserTableToolbar
+          <TableToolbar
             filters={filters}
             onResetPage={table.onResetPage}
           />
 
           {canReset && (
-            <UserTableFiltersResult
+            <TableFiltersResult
               filters={filters}
               totalResults={dataFiltered.length}
               onResetPage={table.onResetPage}
@@ -358,13 +357,13 @@ export function RuhsatListView() {
                       table.page * table.rowsPerPage + table.rowsPerPage
                     )
                     .map((row) => (
-                      <UserTableRow
+                      <UseTableRow
                         key={row.id}
                         row={row}
                         selected={table.selected.includes(row.id)}
                         onSelectRow={() => table.onSelectRow(row.id)}
                         onDeleteRow={() => handleDeleteRow(row.id)}
-                        editHref={paths.dashboard.user.edit(row.id)}
+                        editHref={paths.dashboard.permit.edit(row.id)}
                       />
                     ))}
 

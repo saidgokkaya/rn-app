@@ -73,6 +73,17 @@ export const dashboardRoutes = [
       },
       { path: 'permit', element: (<RuhsatPage />) },
       {
+        path: 'permit',
+        children: [
+          { index: true, element: (<RuhsatPage />) },
+          { path: 'new', element: (<RuhsatPage />) },
+          { path: ':id/edit', element: (<RuhsatPage />) },
+          { path: 'activity', element: (<RuhsatPage />) },
+          { path: 'warehouse', element: (<RuhsatPage />) },
+          { path: 'class', element: (<RuhsatPage />) },
+        ],
+      },
+      {
         path: 'numbering',
         children: [
           { index: true, element: (<NumaratajPage />) },

@@ -1,1 +1,1 @@
-export * from './user-list-view';
+export * from './permit-list-view';

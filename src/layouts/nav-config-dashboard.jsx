@@ -50,7 +50,7 @@ const NavConfigDashboard = () => {
       items: filterItems([
         {
           title: 'Ruhsat',
-          path: paths.dashboard.permit,
+          path: paths.dashboard.permit.root,
           icon: ICONS.permit
         },
         {

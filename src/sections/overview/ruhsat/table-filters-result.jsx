@@ -6,7 +6,7 @@ import { chipProps, FiltersBlock, FiltersResult } from 'src/components/filters-r
 
 // ----------------------------------------------------------------------
 
-export function UserTableFiltersResult({ filters, onResetPage, totalResults, sx }) {
+export function TableFiltersResult({ filters, onResetPage, totalResults, sx }) {
   const { state: currentFilters, setState: updateFilters, resetState: resetFilters } = filters;
 
   const handleRemoveKeyword = useCallback(() => {
