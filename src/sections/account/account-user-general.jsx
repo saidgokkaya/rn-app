@@ -28,8 +28,6 @@ export const UpdateUserSchema = zod.object({
     .min(1, { message: 'E-Posta zorunludur!' })
     .email({ message: 'E-posta geçerli bir e-posta adresi olmalıdır!' }),
   phone: schemaHelper.phoneNumber({ isValid: isValidPhoneNumber }),
-  dateOfBirth: zod.string().min(1, { message: 'Doğum Tarihi zorunludur!' }),
-  gender: zod.enum(['E', 'K'], { message: 'Cinsiyet seçmek zorunludur!' }),
 });
 
 // ----------------------------------------------------------------------
@@ -42,8 +40,6 @@ export function AccountUserGeneral() {
     lastName: '',
     mail: '',
     phone: '',
-    dateOfBirth: '',
-    gender: '',
   });
 
   const defaultValues = {
@@ -52,8 +48,6 @@ export function AccountUserGeneral() {
     lastName: '',
     mail: '',
     phone: '',
-    dateOfBirth: '',
-    gender: '',
   };
 
   const fetchImage = (src) => {
@@ -237,15 +231,6 @@ export function AccountUserGeneral() {
                 <Field.Text name="lastName" label="Soyad" />
                 <Field.Text name="mail" label="E-Posta" />
                 <Field.Phone name="phone" label="Telefon" />
-                <Field.DatePicker name="dateOfBirth" label="Doğum Tarihi" />
-                <Field.RadioGroup
-                  name="gender"
-                  label="Cinsiyet"
-                  options={[
-                    { value: 'E', label: 'Erkek' },
-                    { value: 'K', label: 'Kadın' },
-                  ]}
-                />
               </Box>
 
               <Stack spacing={3} sx={{ mt: 3, alignItems: 'flex-end' }}>

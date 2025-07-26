@@ -49,6 +49,8 @@ const STATUS_OPTIONS = [{ value: 'all', label: 'Hepsi' }, ...USER_STATUS_OPTIONS
 const TABLE_HEAD = [
   { id: 'name', label: 'Ad Soyad', width: 220 },
   { id: 'phone', label: 'Telefon', width: 200 },
+  { id: 'title', label: 'Pozisyon', width: 180 },
+  { id: 'dateOfBirth', label: 'Doğum Tarihi', width: 200 },
   { id: 'isActive', label: 'Durum', width: 100 },
   { id: '', width: 100 },
   { id: '', width: 88 },
@@ -56,7 +58,7 @@ const TABLE_HEAD = [
 
 // ----------------------------------------------------------------------
 
-export function UserListView() {
+export function RuhsatListView() {
   const table = useTable();
   const confirmDialog = useBoolean();
   
@@ -216,21 +218,46 @@ export function UserListView() {
     <>
       <DashboardContent>
         <CustomBreadcrumbs
-          heading="Kullanıcı Listesi"
+          heading="Ruhsat"
           links={[
             { name: 'Başlangıç', href: paths.dashboard.root },
-            { name: 'Organizasyon' },
-            { name: 'Kullanıcı Listesi' },
+            { name: 'Ruhsat' },
           ]}
           action={
-            <Button
-              component={RouterLink}
-              href={paths.dashboard.user.new}
-              variant="contained"
-              startIcon={<Iconify icon="mingcute:add-line" />}
-            >
-              Yeni Kullanıcı
-            </Button>
+            <>
+              <Button
+                component={RouterLink}
+                href={paths.dashboard.user.new}
+                variant="contained"
+                startIcon={<Iconify icon="mingcute:add-line" />}
+              >
+                Faaliyet Konusu
+              </Button>
+              <Button
+                component={RouterLink}
+                href={paths.dashboard.user.new}
+                variant="contained"
+                startIcon={<Iconify icon="mingcute:add-line" />}
+              >
+                Ruhsat Sınıfı
+              </Button>
+              <Button
+                component={RouterLink}
+                href={paths.dashboard.user.new}
+                variant="contained"
+                startIcon={<Iconify icon="mingcute:add-line" />}
+              >
+                Depo
+              </Button>
+              <Button
+                component={RouterLink}
+                href={paths.dashboard.user.new}
+                variant="contained"
+                startIcon={<Iconify icon="mingcute:add-line" />}
+              >
+                Ruhsat Ekle
+              </Button>
+            </>
           }
           sx={{ mb: { xs: 3, md: 5 } }}
         />

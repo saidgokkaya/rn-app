@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async';
 
-import { OverviewAppView } from 'src/sections/overview/app/view';
+import { RuhsatListView } from 'src/sections/overview/ruhsat/view';
 
 // ----------------------------------------------------------------------
 
@@ -13,7 +13,7 @@ export default function OverviewAppPage() {
         <title> {metadata.title}</title>
       </Helmet>
 
-      <OverviewAppView />
+      <RuhsatListView />
     </>
   );
 }

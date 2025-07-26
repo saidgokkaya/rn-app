@@ -24,23 +24,13 @@ import { Iconify } from 'src/components/iconify';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 import { CustomPopover } from 'src/components/custom-popover';
 
-import { UserQuickEditForm } from './user-quick-edit-form';
-
 // ----------------------------------------------------------------------
 
 export function UserTableRow({ row, selected, editHref, onSelectRow, onDeleteRow }) {
-  const [currentRow, setCurrentRow] = useState(row);  // Durumu izleyen state
+  const [currentRow, setCurrentRow] = useState(row);
   const menuActions = usePopover();
   const confirmDialog = useBoolean();
   const quickEditForm = useBoolean();
-
-  const renderQuickEditForm = () => (
-    <UserQuickEditForm
-      currentUser={currentRow}
-      open={quickEditForm.value}
-      onClose={quickEditForm.onFalse}
-    />
-  );
 
   const renderMenuActions = () => (
     <CustomPopover
@@ -156,6 +146,10 @@ export function UserTableRow({ row, selected, editHref, onSelectRow, onDeleteRow
 
         <TableCell sx={{ whiteSpace: 'nowrap' }}>{currentRow.phone}</TableCell>
 
+        <TableCell sx={{ whiteSpace: 'nowrap' }}>{currentRow.title}</TableCell>
+
+        <TableCell sx={{ whiteSpace: 'nowrap' }}>{currentRow.dateOfBirth}</TableCell>
+
         <TableCell>
           <Label
             variant="soft"
@@ -191,7 +185,6 @@ export function UserTableRow({ row, selected, editHref, onSelectRow, onDeleteRow
         </TableCell>
       </TableRow>
 
-      {renderQuickEditForm()}
       {renderMenuActions()}
       {renderConfirmDialog()}
     </>

@@ -38,10 +38,6 @@ export const UpdateUserSchema = zod.object({
     .min(1, { message: 'E-Posta zorunludur!' })
     .email({ message: 'E-posta geçerli bir e-posta adresi olmalıdır!' }),
   phone: schemaHelper.phoneNumber({ isValid: isValidPhoneNumber }),
-  title: zod.string().min(1, { message: 'Ünvan zorunludur!' }),
-  dateOfBirth: zod.string().min(1, { message: 'Doğum Tarihi zorunludur!' }),
-  address: zod.string().min(1, { message: 'Adres zorunludur!' }),
-  gender: zod.enum(['E', 'K'], { message: 'Cinsiyet seçmek zorunludur!' }),
 });
 
 // ----------------------------------------------------------------------
@@ -58,11 +54,6 @@ export function AccountGeneral() {
     lastName: '',
     mail: '',
     phone: '',
-    title: '',
-    dateOfBirth: '',
-    address: '',
-    gender: '',
-    accountType: '',
   });
 
   const defaultValues = {
@@ -75,10 +66,6 @@ export function AccountGeneral() {
     lastName: '',
     mail: '',
     phone: '',
-    title: '',
-    dateOfBirth: '',
-    address: '',
-    gender: '',
   };
 
   const fetchImage = (src) => {
@@ -178,10 +165,6 @@ export function AccountGeneral() {
           lastName: data.lastName,
           mail: data.mail,
           phone: data.phone,
-          title: data.title,
-          dateOfBirth: data.dateOfBirth,
-          address: data.address,
-          gender: data.gender
         })
       });
 
@@ -213,7 +196,7 @@ export function AccountGeneral() {
     }
   });
 
-  const taskNumberLabel = currentUser.accountType === 'individual' ? 'TCKN' : 'Vergi No';
+  const taskNumberLabel = 'Vergi No';
 
   return (
       <Form methods={methods} onSubmit={onSubmit}>
@@ -287,17 +270,6 @@ export function AccountGeneral() {
                 <Field.Text name="lastName" label="Soyad" />
                 <Field.Text name="mail" label="E-Posta" />
                 <Field.Phone name="phone" label="Telefon" />
-                <Field.Text name="title" label="Ünvan" />
-                <Field.DatePicker name="dateOfBirth" label="Doğum Tarihi" />
-                <Field.Text name="address" multiline rows={4} label="Adres" />
-                <Field.RadioGroup
-                  name="gender"
-                  label="Cinsiyet"
-                  options={[
-                    { value: 'E', label: 'Erkek' },
-                    { value: 'K', label: 'Kadın' },
-                  ]}
-                />
               </Box>
 
               <Stack spacing={3} sx={{ mt: 3, alignItems: 'flex-end' }}>
