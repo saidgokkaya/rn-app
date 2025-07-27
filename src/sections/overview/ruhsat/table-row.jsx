@@ -13,11 +13,13 @@ import MenuList from '@mui/material/MenuList';
 import MenuItem from '@mui/material/MenuItem';
 import TableRow from '@mui/material/TableRow';
 import Checkbox from '@mui/material/Checkbox';
+import Divider from '@mui/material/Divider';
 import TableCell from '@mui/material/TableCell';
 import IconButton from '@mui/material/IconButton';
 
 import { RouterLink } from 'src/routes/components';
 
+import { fDate } from 'src/utils/format-time';
 import { Label } from 'src/components/label';
 import { toast } from 'src/components/snackbar';
 import { Iconify } from 'src/components/iconify';
@@ -26,11 +28,43 @@ import { CustomPopover } from 'src/components/custom-popover';
 
 // ----------------------------------------------------------------------
 
-export function UseTableRow({ row, selected, editHref, onSelectRow, onDeleteRow }) {
+export function UseTableRow({ row, selected, editHref, onSelectRow, onDeleteRow, onUpdateStatus }) {
   const [currentRow, setCurrentRow] = useState(row);
   const menuActions = usePopover();
   const confirmDialog = useBoolean();
   const quickEditForm = useBoolean();
+
+  async function toggleCampaignStatus(id, isActive) {
+    const token = localStorage.getItem('jwt_access_token');
+    const nextLabel = isActive ? 'Pasif' : 'Aktif';
+    const successMsg = isActive
+      ? 'Ruhsat başarıyla pasifleştirildi.'
+      : 'Ruhsat başarıyla aktifleştirildi.';
+
+    try {
+      const res = await fetch(
+        `${CONFIG.apiUrl}/Ruhsat/permit-status?id=${id}`,
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      onUpdateStatus(id, nextLabel);
+
+      setCurrentRow((prev) => ({
+        ...prev,
+        isActive: nextLabel,
+      }));
+
+      toast.success(successMsg);
+    } catch (error) {
+      toast.error('Bir hata oluştu.');
+    }
+  }
 
   const renderMenuActions = () => (
     <CustomPopover
@@ -40,6 +74,33 @@ export function UseTableRow({ row, selected, editHref, onSelectRow, onDeleteRow 
       slotProps={{ arrow: { placement: 'right-top' } }}
     >
       <MenuList>
+        <li>
+          <MenuItem component={RouterLink} onClick={() => menuActions.onClose()}>
+            <Iconify icon="material-symbols:download-rounded" />
+            İndir
+          </MenuItem>
+        </li>
+        <li>
+          <MenuItem component={RouterLink} onClick={() => menuActions.onClose()}>
+            <Iconify icon="material-symbols:image-outline-rounded" />
+            Görsel
+          </MenuItem>
+        </li>
+        <li>
+          <MenuItem component={RouterLink} onClick={() => menuActions.onClose()}>
+            <Iconify icon="mi:document" />
+            Taranmış Belge
+          </MenuItem>
+        </li>
+
+        <Divider sx={{ borderStyle: 'dashed' }} />
+
+        <li>
+          <MenuItem component={RouterLink} onClick={() => { toggleCampaignStatus(row.id, row.isActive === 'Aktif'); }}>
+            <Iconify icon="fluent:status-16-filled" />
+            {row.isActive === 'Aktif' ? 'Pasif yap' : 'Aktif yap'}
+          </MenuItem>
+        </li>
         <li>
           <MenuItem component={RouterLink} href={editHref} onClick={() => menuActions.onClose()}>
             <Iconify icon="solar:pen-bold" />
@@ -75,43 +136,6 @@ export function UseTableRow({ row, selected, editHref, onSelectRow, onDeleteRow 
     />
   );
 
-  const handleStatusChange = useCallback(async () => {
-    try {
-      const token = localStorage.getItem('jwt_access_token');
-      const response = await fetch(`${CONFIG.apiUrl}/Organization/status-user?userId=${currentRow.id}`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        }
-      });
-
-      if (!response.ok) {
-        let errorResponse = { message: "Sunucudan beklenmeyen bir hata döndü." };
-
-        try {
-          errorResponse = await response.json();
-        } catch (parseError) {
-          console.error("Error parsing response:", parseError);
-        }
-
-        throw new Error(errorResponse.message || "Bir hata oluştu!");
-      }
-
-      const updatedStatus = currentRow.isActive === 'Aktif' ? 'Pasif' : 'Aktif';
-      setCurrentRow((prevState) => ({
-        ...prevState,
-        isActive: updatedStatus,  // Durumu güncelle
-      }));
-
-      const statusMessage = updatedStatus === 'Aktif' ? 'aktif' : 'pasif';
-      toast.success('Kullanıcı ' + statusMessage + ' hale getirildi!');
-      window.location.reload();
-    } catch (error) {
-      toast.error(error.message || "Silme işlemi başarısız!");
-    }
-  }, [currentRow]);
-
   return (
     <>
       <TableRow hover selected={selected} aria-checked={selected} tabIndex={-1}>
@@ -126,29 +150,19 @@ export function UseTableRow({ row, selected, editHref, onSelectRow, onDeleteRow 
           />
         </TableCell>
 
-        <TableCell>
-          <Box sx={{ gap: 2, display: 'flex', alignItems: 'center' }}>
-            <Stack sx={{ typography: 'body2', flex: '1 1 auto', alignItems: 'flex-start' }}>
-              <Link
-                component={RouterLink}
-                href={editHref}
-                color="inherit"
-                sx={{ cursor: 'pointer' }}
-              >
-                {currentRow.name}
-              </Link>
-              <Box component="span" sx={{ color: 'text.disabled' }}>
-                {currentRow.mail}
-              </Box>
-            </Stack>
-          </Box>
-        </TableCell>
+        <TableCell sx={{ whiteSpace: 'nowrap' }}>{currentRow.ruhsatNo}</TableCell>
 
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>{currentRow.phone}</TableCell>
+        <TableCell sx={{ whiteSpace: 'nowrap' }}>{currentRow.tcKimlikNo}</TableCell>
 
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>{currentRow.title}</TableCell>
+        <TableCell sx={{ whiteSpace: 'nowrap' }}>{currentRow.fullName}</TableCell>
 
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>{currentRow.dateOfBirth}</TableCell>
+        <TableCell sx={{ whiteSpace: 'nowrap' }}>{currentRow.isyeriUnvani}</TableCell>
+
+        <TableCell sx={{ whiteSpace: 'nowrap' }}>{currentRow.faaliyetKonusuName}</TableCell>
+
+        <TableCell sx={{ whiteSpace: 'nowrap' }}>{currentRow.ruhsatTuruName}</TableCell>
+
+        <TableCell sx={{ whiteSpace: 'nowrap' }}>{fDate(currentRow.verilisTarihi)}</TableCell>
 
         <TableCell>
           <Label

@@ -47,10 +47,13 @@ import { TableFiltersResult } from '../table-filters-result';
 const STATUS_OPTIONS = [{ value: 'all', label: 'Hepsi' }, ...USER_STATUS_OPTIONS];
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Ad Soyad', width: 220 },
-  { id: 'phone', label: 'Telefon', width: 200 },
-  { id: 'title', label: 'Pozisyon', width: 180 },
-  { id: 'dateOfBirth', label: 'Doğum Tarihi', width: 200 },
+  { id: 'ruhsatNo', label: 'Ruhsat No', width: 100 },
+  { id: 'tcKimlikNo', label: 'Vergi No', width: 100 },
+  { id: 'fullName', label: 'Ad Soyad', width: 100 },
+  { id: 'isyeriUnvani', label: 'İşyeri Ünvanı', width: 100 },
+  { id: 'faaliyetKonusuName', label: 'Faaliyet Konusu', width: 100 },
+  { id: 'ruhsatTuruName', label: 'Ruhsat Türü', width: 100 },
+  { id: 'verilisTarihi', label: 'Veriliş Tarihi', width: 100 },
   { id: 'isActive', label: 'Durum', width: 100 },
   { id: '', width: 88 },
 ];
@@ -61,11 +64,10 @@ export function RuhsatListView() {
   const table = useTable();
   const confirmDialog = useBoolean();
   
-  // API'den alınan veriyi depolamak için state
   const [tableData, setTableData] = useState([]);
-  const [loading, setLoading] = useState(false);  // Loading durumu için state
+  const [loading, setLoading] = useState(false);
 
-  const filters = useSetState({ name: '', isActive: 'all' });
+  const filters = useSetState({ ruhsatNo: '', tcKimlikNo: '', fullName: '', isyeriUnvani: '', faaliyetKonusuName: '', ruhsatTuruName: '', isActive: 'all' });
   const { state: currentFilters, setState: updateFilters } = filters;
 
   useEffect(() => {
@@ -73,7 +75,7 @@ export function RuhsatListView() {
       try {
         setLoading(true);
         const token = localStorage.getItem('jwt_access_token');
-        const response = await fetch(`${CONFIG.apiUrl}/Organization/users`, {
+        const response = await fetch(`${CONFIG.apiUrl}/Ruhsat/permits`, {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -100,7 +102,13 @@ export function RuhsatListView() {
   const dataInPage = rowInPage(dataFiltered, table.page, table.rowsPerPage);
 
   const canReset =
-    !!currentFilters.name || currentFilters.isActive !== 'all';
+  currentFilters.isActive !== 'all' ||
+  !!currentFilters.ruhsatNo ||
+  !!currentFilters.tcKimlikNo ||
+  !!currentFilters.fullName ||
+  !!currentFilters.isyeriUnvani ||
+  !!currentFilters.faaliyetKonusuName ||
+  !!currentFilters.ruhsatTuruName;
 
   const notFound = (!dataFiltered.length && canReset) || !dataFiltered.length;
 
@@ -112,23 +120,13 @@ export function RuhsatListView() {
         table.onUpdatePageDeleteRow(dataInPage.length);
   
         const token = localStorage.getItem('jwt_access_token');
-        const response = await fetch(`${CONFIG.apiUrl}/Organization/delete-user?userId=${id}`, {
+        const response = await fetch(`${CONFIG.apiUrl}/Ruhsat/delete-permit?id=${id}`, {
           method: "POST",
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
         });
-  
-        if (!response.ok) {
-          let errorResponse = { message: "Sunucudan beklenmeyen bir hata döndü." };
-          try {
-            errorResponse = await response.json();
-          } catch (parseError) {
-            console.error("Error parsing response:", parseError);
-          }
-          throw new Error(errorResponse.message || "Bir hata oluştu!");
-        }
   
         toast.success('Silme işlemi başarılı!');
       } catch (error) {
@@ -140,36 +138,24 @@ export function RuhsatListView() {
 
   const handleDeleteRows = useCallback(async () => {
     try {
-      const selectedUserIds = table.selected;
+      const selectedPermitIds = table.selected;
   
-      if (selectedUserIds.length === 0) {
+      if (selectedPermitIds.length === 0) {
         toast.error('Silinecek kullanıcı seçilmedi!');
         return;
       }
       
       const token = localStorage.getItem('jwt_access_token');
-      const response = await fetch(`${CONFIG.apiUrl}/Organization/delete-users`, {
+      const response = await fetch(`${CONFIG.apiUrl}/Ruhsat/delete-permits`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ userId: selectedUserIds })
+        body: JSON.stringify({ permitIds: selectedPermitIds })
       });
   
-      if (!response.ok) {
-        let errorResponse = { message: "Sunucudan beklenmeyen bir hata döndü." };
-  
-        try {
-          errorResponse = await response.json();
-        } catch (parseError) {
-          console.error("Error parsing response:", parseError);
-        }
-  
-        throw new Error(errorResponse.message || "Bir hata oluştu!");
-      }
-  
-      const deleteRows = tableData.filter((row) => !selectedUserIds.includes(row.id));
+      const deleteRows = tableData.filter((row) => !selectedPermitIds.includes(row.id));
       setTableData(deleteRows);
       
       table.onUpdatePageDeleteRows(dataInPage.length, dataFiltered.length);
@@ -187,6 +173,14 @@ export function RuhsatListView() {
     },
     [updateFilters, table]
   );
+
+  const handleUpdateStatus = useCallback((id, newStatus) => {
+    setTableData((prevData) =>
+      prevData.map((item) =>
+        item.id === id ? { ...item, isActive: newStatus } : item
+      )
+    );
+  }, []);
 
   const renderConfirmDialog = () => (
     <ConfirmDialog
@@ -364,6 +358,7 @@ export function RuhsatListView() {
                         onSelectRow={() => table.onSelectRow(row.id)}
                         onDeleteRow={() => handleDeleteRow(row.id)}
                         editHref={paths.dashboard.permit.edit(row.id)}
+                        onUpdateStatus={handleUpdateStatus}
                       />
                     ))}
 
@@ -398,7 +393,15 @@ export function RuhsatListView() {
 // ----------------------------------------------------------------------
 
 function applyFilter({ inputData, comparator, filters }) {
-  const { name, isActive } = filters;
+  const {
+    ruhsatNo,
+    tcKimlikNo,
+    fullName,
+    isyeriUnvani,
+    faaliyetKonusuName,
+    ruhsatTuruName,
+    isActive,
+  } = filters;
 
   const stabilizedThis = inputData.map((el, index) => [el, index]);
 
@@ -410,12 +413,45 @@ function applyFilter({ inputData, comparator, filters }) {
 
   inputData = stabilizedThis.map((el) => el[0]);
 
-  if (name) {
-    inputData = inputData.filter((user) => user.name.toLowerCase().includes(name.toLowerCase()));
+  // Her bir filtre alanı için ayrı ayrı filtreleme
+  if (ruhsatNo) {
+    inputData = inputData.filter((item) =>
+      item.ruhsatNo?.toLowerCase().includes(ruhsatNo.toLowerCase())
+    );
+  }
+
+  if (tcKimlikNo) {
+    inputData = inputData.filter((item) =>
+      item.tcKimlikNo?.toLowerCase().includes(tcKimlikNo.toLowerCase())
+    );
+  }
+
+  if (fullName) {
+    inputData = inputData.filter((item) =>
+      item.fullName?.toLowerCase().includes(fullName.toLowerCase())
+    );
+  }
+
+  if (isyeriUnvani) {
+    inputData = inputData.filter((item) =>
+      item.isyeriUnvani?.toLowerCase().includes(isyeriUnvani.toLowerCase())
+    );
+  }
+
+  if (faaliyetKonusuName) {
+    inputData = inputData.filter((item) =>
+      item.faaliyetKonusuName?.toLowerCase().includes(faaliyetKonusuName.toLowerCase())
+    );
+  }
+
+  if (ruhsatTuruName) {
+    inputData = inputData.filter((item) =>
+      item.ruhsatTuruName?.toLowerCase().includes(ruhsatTuruName.toLowerCase())
+    );
   }
 
   if (isActive !== 'all') {
-    inputData = inputData.filter((user) => user.isActive === isActive);
+    inputData = inputData.filter((item) => item.isActive === isActive);
   }
 
   return inputData;
