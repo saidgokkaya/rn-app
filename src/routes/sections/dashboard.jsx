@@ -26,7 +26,9 @@ const AccountChangePasswordPage = lazy(
   () => import('src/pages/dashboard/user/account/change-password')
 );
 //App
-const RuhsatPage = lazy(() => import('src/pages/ruhsat'));
+const PermitPage = lazy(() => import('src/pages/ruhsat'));
+const NewPermitPage = lazy(() => import('src/pages/ruhsat/new'));
+const EditPermitPage = lazy(() => import('src/pages/ruhsat/edit'));
 const ActivityPage = lazy(() => import('src/pages/ruhsat/activity'));
 const ClassPage = lazy(() => import('src/pages/ruhsat/class'));
 const WareHousePage = lazy(() => import('src/pages/ruhsat/warehouse'));
@@ -74,13 +76,13 @@ export const dashboardRoutes = [
           },
         ],
       },
-      { path: 'permit', element: (<RuhsatPage />) },
+      { path: 'permit', element: (<PermitPage />) },
       {
         path: 'permit',
         children: [
-          { index: true, element: (<RuhsatPage />) },
-          { path: 'new', element: (<RuhsatPage />) },
-          { path: ':id/edit', element: (<RuhsatPage />) },
+          { index: true, element: (<PermitPage />) },
+          { path: 'new', element: (<NewPermitPage />) },
+          { path: ':id/edit', element: (<EditPermitPage />) },
           { path: 'activity', element: (<ActivityPage />) },
           { path: 'warehouse', element: (<WareHousePage />) },
           { path: 'class', element: (<ClassPage />) },
