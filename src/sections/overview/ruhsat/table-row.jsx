@@ -40,6 +40,29 @@ export function UseTableRow({ row, selected, editHref, onSelectRow, onDeleteRow,
   const [selectedFile, setSelectedFile] = useState(null);
   const [uploading, setUploading] = useState(false);
 
+  async function handleDeleteScannedFile() {
+    const token = localStorage.getItem('jwt_access_token');
+
+    try {
+      const res = await fetch(`${CONFIG.apiUrl}/Ruhsat/delete-scanned-file?id=${currentRow.id}`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      setCurrentRow((prev) => ({
+        ...prev,
+        scannedFilePath: null,
+      }));
+
+      toast.success('PDF başarıyla silindi.');
+      scannedDialog.onFalse();
+    } catch (error) {
+      toast.error('PDF silinirken bir hata oluştu.');
+    }
+  }
+
   async function handleUpload() {
     if (!selectedFile) {
       toast.error('Lütfen bir PDF dosyası seçin.');
@@ -234,6 +257,16 @@ export function UseTableRow({ row, selected, editHref, onSelectRow, onDeleteRow,
               style={{ border: 'none' }}
               title="PDF Preview"
             />
+          </Box>
+
+          <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
+            <Button
+              variant="outlined"
+              color="error"
+              onClick={handleDeleteScannedFile}
+            >
+              PDF'yi Sil
+            </Button>
           </Box>
         </DialogContent>
       ) : (

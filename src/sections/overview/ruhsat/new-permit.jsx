@@ -244,11 +244,6 @@ export function PermitForm() {
         body: formData
       });
 
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(errorText || 'Bir hata oluştu.');
-      }
-
       toast.success('Ruhsat başarıyla kaydedildi');
       navigate('/dashboard/permit');
     } catch (error) {
