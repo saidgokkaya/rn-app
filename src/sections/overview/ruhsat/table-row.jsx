@@ -1,6 +1,10 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useBoolean, usePopover } from 'minimal-shared/hooks';
 
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+
 import { CONFIG } from 'src/global-config';
 
 import Box from '@mui/material/Box';
@@ -33,6 +37,7 @@ export function UseTableRow({ row, selected, editHref, onSelectRow, onDeleteRow,
   const menuActions = usePopover();
   const confirmDialog = useBoolean();
   const quickEditForm = useBoolean();
+  const imageDialog = useBoolean();
 
   async function toggleCampaignStatus(id, isActive) {
     const token = localStorage.getItem('jwt_access_token');
@@ -81,7 +86,12 @@ export function UseTableRow({ row, selected, editHref, onSelectRow, onDeleteRow,
           </MenuItem>
         </li>
         <li>
-          <MenuItem component={RouterLink} onClick={() => menuActions.onClose()}>
+          <MenuItem
+            onClick={() => {
+              imageDialog.onTrue();
+              menuActions.onClose();
+            }}
+          >
             <Iconify icon="material-symbols:image-outline-rounded" />
             Görsel
           </MenuItem>
@@ -134,6 +144,28 @@ export function UseTableRow({ row, selected, editHref, onSelectRow, onDeleteRow,
         </Button>
       }
     />
+  );
+
+  const renderImageDialog = () => (
+    <Dialog open={imageDialog.value} onClose={imageDialog.onFalse} maxWidth="sm" fullWidth>
+      <DialogTitle>Görsel Önizleme</DialogTitle>
+      <DialogContent dividers>
+        {currentRow.photoPath ? (
+          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+            <img
+              src={`/permit-photo/${currentRow.photoPath}`}
+              alt="Ruhsat Görseli"
+              style={{ maxWidth: '100%', maxHeight: 400 }}
+            />
+          </Box>
+        ) : (
+          <Box sx={{ textAlign: 'center', p: 2 }}>
+            <Iconify icon="material-symbols:warning" />
+            <p>Görsel bulunamadı</p>
+          </Box>
+        )}
+      </DialogContent>
+    </Dialog>
   );
 
   return (
@@ -191,6 +223,7 @@ export function UseTableRow({ row, selected, editHref, onSelectRow, onDeleteRow,
 
       {renderMenuActions()}
       {renderConfirmDialog()}
+      {renderImageDialog()}
     </>
   );
 }
