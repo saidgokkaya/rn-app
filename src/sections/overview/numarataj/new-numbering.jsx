@@ -56,7 +56,7 @@ export function NumberingForm() {
     fetchMahalleler();
   }, [token]);
 
- const handleSubmit = async () => {
+  const handleSubmit = async () => {
     if (!adSoyad) return toast.error('Lütfen Ad Soyad giriniz.');
     if (!mahalleId) return toast.error('Lütfen Mahalle seçiniz.');
     if (!caddeSokak) return toast.error('Lütfen Cadde / Sokak giriniz.');
@@ -94,6 +94,50 @@ export function NumberingForm() {
 
       toast.success('Numarataj bilgisi başarıyla kaydedildi.');
       navigate('/dashboard/numbering/common-areas');
+    } catch (error) {
+      toast.error('Kayıt sırasında bir hata oluştu.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleCopySubmit = async () => {
+    if (!adSoyad) return toast.error('Lütfen Ad Soyad giriniz.');
+    if (!mahalleId) return toast.error('Lütfen Mahalle seçiniz.');
+    if (!caddeSokak) return toast.error('Lütfen Cadde / Sokak giriniz.');
+    if (!disKapi) return toast.error('Lütfen Dış Kapı No giriniz.');
+
+    try {
+      setLoading(true);
+
+      const payload = {
+        tcKimlikNo,
+        adSoyad,
+        telefon,
+        caddeSokak,
+        disKapi,
+        icKapiNo,
+        siteAdi,
+        eskiAdres,
+        blokAdi,
+        adresNo,
+        isYeriUnvani,
+        ada,
+        parsel,
+        numaratajType,
+        mahalleId
+      };
+
+      const response = await fetch(`${CONFIG.apiUrl}/Numarataj/add`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify(payload)
+      });
+
+      toast.success('Numarataj bilgisi başarıyla kaydedildi.');
     } catch (error) {
       toast.error('Kayıt sırasında bir hata oluştu.');
     } finally {
@@ -264,6 +308,15 @@ export function NumberingForm() {
             disabled={loading}
           >
             {loading ? <CircularProgress size={24} color="inherit" /> : 'Kaydet'}
+          </Button>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleCopySubmit}
+            disabled={loading}
+            sx={{ ml: 2 }}
+          >
+            {loading ? <CircularProgress size={24} color="inherit" /> : 'Kopya Oluştur'}
           </Button>
         </Box>
       </Paper>
