@@ -33,6 +33,10 @@ const ActivityPage = lazy(() => import('src/pages/ruhsat/activity'));
 const ClassPage = lazy(() => import('src/pages/ruhsat/class'));
 const WareHousePage = lazy(() => import('src/pages/ruhsat/warehouse'));
 const NumaratajPage = lazy(() => import('src/pages/numarataj'));
+const AreasPage = lazy(() => import('src/pages/numarataj/areas'));
+const NeighbourhoodPage = lazy(() => import('src/pages/numarataj/neighbourhood'));
+const NewNumberingPage = lazy(() => import('src/pages/numarataj/new'));
+const EditNumberingPage = lazy(() => import('src/pages/numarataj/edit'));
 const LogPage = lazy(() => import('src/pages/log'));
 
 // ----------------------------------------------------------------------
@@ -93,7 +97,10 @@ export const dashboardRoutes = [
         children: [
           { index: true, element: (<NumaratajPage />) },
           { path: 'common-areas', element: (<NumaratajPage />) },
-          { path: 'areas', element: (<NumaratajPage />) },
+          { path: 'areas', element: (<AreasPage />) },
+          { path: 'neighbourhood', element: (<NeighbourhoodPage />) },
+          { path: 'new', element: (<NewNumberingPage />) },
+          { path: ':id/edit', element: (<EditNumberingPage />) },
         ],
       },
       { path: 'log', element: (<RoleGuard allowedRoles={['Admin']}><LogPage /></RoleGuard>) },

@@ -40,7 +40,10 @@ export const paths = {
     numbering: {
       root: `${ROOTS.DASHBOARD}/numbering`,
       common_area: `${ROOTS.DASHBOARD}/numbering/common-areas`,
-      areas: `${ROOTS.DASHBOARD}/numbering/areas`
+      areas: `${ROOTS.DASHBOARD}/numbering/areas`,
+      neighbourhood: `${ROOTS.DASHBOARD}/numbering/neighbourhood`,
+      new: `${ROOTS.DASHBOARD}/numbering/new`,
+      edit: (id) => `${ROOTS.DASHBOARD}/numbering/${id}/edit`,
     },
     log: `${ROOTS.DASHBOARD}/log`,
     user: {

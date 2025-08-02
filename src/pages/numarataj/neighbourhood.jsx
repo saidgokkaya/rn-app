@@ -1,19 +1,19 @@
 import { Helmet } from 'react-helmet-async';
 
-import { NumaratajListView } from 'src/sections/overview/numarataj/view';
+import { NeighbourhoodView } from 'src/sections/overview/numarataj/view';
 
 // ----------------------------------------------------------------------
 
-const metadata = { title: `Numarataj` };
+const metadata = { title: `Mahalle` };
 
-export default function OverviewAppPage() {
+export default function Page() {
   return (
     <>
       <Helmet>
         <title> {metadata.title}</title>
       </Helmet>
 
-      <NumaratajListView />
+      <NeighbourhoodView />
     </>
   );
 }

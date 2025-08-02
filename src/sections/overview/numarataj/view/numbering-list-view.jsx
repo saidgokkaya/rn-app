@@ -47,27 +47,28 @@ import { TableFiltersResult } from '../table-filters-result';
 const STATUS_OPTIONS = [{ value: 'all', label: 'Hepsi' }, ...USER_STATUS_OPTIONS];
 
 const TABLE_HEAD = [
-  { id: 'ruhsatNo', label: 'Ruhsat No', width: 100 },
-  { id: 'tcKimlikNo', label: 'Vergi No', width: 100 },
-  { id: 'fullName', label: 'Ad Soyad', width: 100 },
-  { id: 'isyeriUnvani', label: 'İşyeri Ünvanı', width: 100 },
-  { id: 'faaliyetKonusuName', label: 'Faaliyet Konusu', width: 100 },
-  { id: 'ruhsatTuruName', label: 'Ruhsat Türü', width: 100 },
-  { id: 'verilisTarihi', label: 'Veriliş Tarihi', width: 100 },
+  { id: 'id', label: 'Belge No', width: 100 },
+  { id: 'numaratajType', label: 'Numarataj Alanı', width: 100 },
+  { id: 'tcKimlikNo', label: 'TC Kimlik No', width: 100 },
+  { id: 'adSoyad', label: 'Ad Soyad', width: 100 },
+  { id: 'telefon', label: 'Telefon', width: 100 },
+  { id: 'insertedDate', label: 'Tarih', width: 100 },
+  { id: 'mahalle', label: 'Mahalle', width: 100 },
+  { id: 'caddeSokak', label: 'Cadde / Sokak', width: 100 },
   { id: 'isActive', label: 'Durum', width: 100 },
   { id: '', width: 88 },
 ];
 
 // ----------------------------------------------------------------------
 
-export function RuhsatListView() {
+export function NumaratajListView() {
   const table = useTable();
   const confirmDialog = useBoolean();
   
   const [tableData, setTableData] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const filters = useSetState({ ruhsatNo: '', tcKimlikNo: '', fullName: '', isyeriUnvani: '', faaliyetKonusuName: '', ruhsatTuruName: '', isActive: 'all' });
+  const filters = useSetState({ id: '', numaratajType: '', tcKimlikNo: '', adSoyad: '', telefon: '', mahalle: '', caddeSokak: '', disKapi: '', icKapiNo: '', isActive: 'all' });
   const { state: currentFilters, setState: updateFilters } = filters;
 
   useEffect(() => {
@@ -75,7 +76,7 @@ export function RuhsatListView() {
       try {
         setLoading(true);
         const token = localStorage.getItem('jwt_access_token');
-        const response = await fetch(`${CONFIG.apiUrl}/Ruhsat/permits`, {
+        const response = await fetch(`${CONFIG.apiUrl}/Numarataj/numberings`, {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -103,12 +104,15 @@ export function RuhsatListView() {
 
   const canReset =
   currentFilters.isActive !== 'all' ||
-  !!currentFilters.ruhsatNo ||
+  !!currentFilters.id ||
+  !!currentFilters.numaratajType ||
   !!currentFilters.tcKimlikNo ||
-  !!currentFilters.fullName ||
-  !!currentFilters.isyeriUnvani ||
-  !!currentFilters.faaliyetKonusuName ||
-  !!currentFilters.ruhsatTuruName;
+  !!currentFilters.adSoyad ||
+  !!currentFilters.telefon ||
+  !!currentFilters.mahalle ||
+  !!currentFilters.caddeSokak ||
+  !!currentFilters.disKapi ||
+  !!currentFilters.icKapiNo;
 
   const notFound = (!dataFiltered.length && canReset) || !dataFiltered.length;
 
@@ -120,7 +124,7 @@ export function RuhsatListView() {
         table.onUpdatePageDeleteRow(dataInPage.length);
   
         const token = localStorage.getItem('jwt_access_token');
-        const response = await fetch(`${CONFIG.apiUrl}/Ruhsat/delete-permit?id=${id}`, {
+        const response = await fetch(`${CONFIG.apiUrl}/Numarataj/delete-numbering?id=${id}`, {
           method: "POST",
           headers: {
             Authorization: `Bearer ${token}`,
@@ -138,24 +142,24 @@ export function RuhsatListView() {
 
   const handleDeleteRows = useCallback(async () => {
     try {
-      const selectedPermitIds = table.selected;
+      const selectedNumberingIds = table.selected;
   
-      if (selectedPermitIds.length === 0) {
+      if (selectedNumberingIds.length === 0) {
         toast.error('Silinecek kullanıcı seçilmedi!');
         return;
       }
       
       const token = localStorage.getItem('jwt_access_token');
-      const response = await fetch(`${CONFIG.apiUrl}/Ruhsat/delete-permits`, {
+      const response = await fetch(`${CONFIG.apiUrl}/Numarataj/delete-numberings`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ permitIds: selectedPermitIds })
+        body: JSON.stringify({ numberingIds: selectedNumberingIds })
       });
   
-      const deleteRows = tableData.filter((row) => !selectedPermitIds.includes(row.id));
+      const deleteRows = tableData.filter((row) => !selectedNumberingIds.includes(row.id));
       setTableData(deleteRows);
       
       table.onUpdatePageDeleteRows(dataInPage.length, dataFiltered.length);
@@ -211,44 +215,29 @@ export function RuhsatListView() {
     <>
       <DashboardContent>
         <CustomBreadcrumbs
-          heading="Ruhsat"
+          heading="Ortak Alan"
           links={[
             { name: 'Başlangıç', href: paths.dashboard.root },
-            { name: 'Ruhsat' },
+            { name: 'Numarataj' },
+            { name: 'Ortak Alan' },
           ]}
           action={
             <>
               <Button
                 component={RouterLink}
-                href={paths.dashboard.permit.activity}
+                href={paths.dashboard.numbering.neighbourhood}
                 variant="contained"
                 startIcon={<Iconify icon="mingcute:add-line" />}
               >
-                Faaliyet Konusu
+                Mahalle
               </Button>
               <Button
                 component={RouterLink}
-                href={paths.dashboard.permit.class}
+                href={paths.dashboard.numbering.new}
                 variant="contained"
                 startIcon={<Iconify icon="mingcute:add-line" />}
               >
-                Ruhsat Sınıfı
-              </Button>
-              <Button
-                component={RouterLink}
-                href={paths.dashboard.permit.warehouse}
-                variant="contained"
-                startIcon={<Iconify icon="mingcute:add-line" />}
-              >
-                Depo
-              </Button>
-              <Button
-                component={RouterLink}
-                href={paths.dashboard.permit.new}
-                variant="contained"
-                startIcon={<Iconify icon="mingcute:add-line" />}
-              >
-                Ruhsat Ekle
+                Numarataj Ekle
               </Button>
             </>
           }
@@ -357,7 +346,7 @@ export function RuhsatListView() {
                         selected={table.selected.includes(row.id)}
                         onSelectRow={() => table.onSelectRow(row.id)}
                         onDeleteRow={() => handleDeleteRow(row.id)}
-                        editHref={paths.dashboard.permit.edit(row.id)}
+                        editHref={paths.dashboard.numbering.edit(row.id)}
                         onUpdateStatus={handleUpdateStatus}
                       />
                     ))}
@@ -394,16 +383,17 @@ export function RuhsatListView() {
 
 function applyFilter({ inputData, comparator, filters }) {
   const {
-    ruhsatNo,
-    tcKimlikNo,
-    fullName,
-    isyeriUnvani,
-    faaliyetKonusuName,
-    ruhsatTuruName,
+    id,
     isActive,
+    numaratajType,
+    tcKimlikNo,
+    adSoyad,
+    telefon,
+    mahalle,
+    caddeSokak,
+    disKapi,
+    icKapiNo,
   } = filters;
-
-  const trLower = (val) => val?.toLocaleLowerCase('tr-TR') || '';
 
   const stabilizedThis = inputData.map((el, index) => [el, index]);
 
@@ -415,9 +405,22 @@ function applyFilter({ inputData, comparator, filters }) {
 
   inputData = stabilizedThis.map((el) => el[0]);
 
-  if (ruhsatNo) {
+  const trLower = (val) => val?.toLocaleLowerCase('tr-TR') || '';
+
+  if (id !== undefined && id !== null && id !== '') {
+    const idNumber = typeof id === 'string' ? parseInt(id, 10) : id;
+    if (!isNaN(idNumber)) {
+      inputData = inputData.filter((item) => item.id === idNumber);
+    }
+  }
+
+  if (isActive !== 'all') {
+    inputData = inputData.filter((item) => item.isActive === isActive);
+  }
+
+  if (numaratajType) {
     inputData = inputData.filter((item) =>
-      trLower(item.ruhsatNo).includes(trLower(ruhsatNo))
+      trLower(item.numaratajType).includes(trLower(numaratajType))
     );
   }
 
@@ -427,32 +430,28 @@ function applyFilter({ inputData, comparator, filters }) {
     );
   }
 
-  if (fullName) {
+  if (adSoyad) {
     inputData = inputData.filter((item) =>
-      trLower(item.fullName).includes(trLower(fullName))
+      trLower(item.adSoyad).includes(trLower(adSoyad))
     );
   }
 
-  if (isyeriUnvani) {
+  if (telefon) {
     inputData = inputData.filter((item) =>
-      trLower(item.isyeriUnvani).includes(trLower(isyeriUnvani))
+      trLower(item.telefon).includes(trLower(telefon))
     );
   }
 
-  if (faaliyetKonusuName) {
+  if (mahalle) {
     inputData = inputData.filter((item) =>
-      trLower(item.faaliyetKonusuName).includes(trLower(faaliyetKonusuName))
+      trLower(item.mahalle).includes(trLower(mahalle))
     );
   }
 
-  if (ruhsatTuruName) {
+  if (caddeSokak) {
     inputData = inputData.filter((item) =>
-      trLower(item.ruhsatTuruName).includes(trLower(ruhsatTuruName))
+      trLower(item.caddeSokak).includes(trLower(caddeSokak))
     );
-  }
-
-  if (isActive !== 'all') {
-    inputData = inputData.filter((item) => item.isActive === isActive);
   }
 
   return inputData;
