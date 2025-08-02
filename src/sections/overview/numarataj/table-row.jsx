@@ -24,21 +24,25 @@ import { fDate } from 'src/utils/format-time';
 import { Label } from 'src/components/label';
 import { toast } from 'src/components/snackbar';
 import { Iconify } from 'src/components/iconify';
+import Switch from '@mui/material/Switch';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 import { CustomPopover } from 'src/components/custom-popover';
 
 // ----------------------------------------------------------------------
 
 export function UseTableRow({ row, selected, editHref, onSelectRow, onDeleteRow, onUpdateStatus }) {
-  const [currentRow, setCurrentRow] = useState(row);
+  const [currentRow, setCurrentRow] = useState({
+    ...row,
+    isVisible: row.isVisible !== undefined ? row.isVisible : true,
+  });
   const menuActions = usePopover();
   const confirmDialog = useBoolean();
 
-  const handleDownloadCertificate = async () => {
+  const handleDownloadCertificate = async (isVisible) => {
     const token = localStorage.getItem('jwt_access_token');
 
     try {
-      const res = await fetch(`${CONFIG.apiUrl}/Numarataj/download-certificate?id=${row.id}`, {
+      const res = await fetch(`${CONFIG.apiUrl}/Numarataj/download-certificate?id=${row.id}&visibilty=${isVisible}`, {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -104,7 +108,7 @@ export function UseTableRow({ row, selected, editHref, onSelectRow, onDeleteRow,
       <MenuList>
         <li>
           <MenuItem onClick={() => {
-            handleDownloadCertificate();
+            handleDownloadCertificate(currentRow.isVisible);
             menuActions.onClose();
           }}>
             <Iconify icon="material-symbols:download-rounded" />
@@ -184,6 +188,20 @@ export function UseTableRow({ row, selected, editHref, onSelectRow, onDeleteRow,
         <TableCell sx={{ whiteSpace: 'nowrap' }}>{currentRow.mahalle}</TableCell>
 
         <TableCell sx={{ whiteSpace: 'nowrap' }}>{currentRow.caddeSokak}</TableCell>
+        
+        <TableCell>
+          {currentRow.numaratajType !== 'Yeni Bina' && (
+            <Switch
+              checked={currentRow.isVisible ?? true}
+              onChange={() => {
+                const newVisibility = !(currentRow.isVisible ?? true);
+                setCurrentRow(prev => ({ ...prev, isVisible: newVisibility }));
+              }}
+              color="primary"
+              inputProps={{ 'aria-label': 'Göster/Gizle' }}
+            />
+          )}
+        </TableCell>
 
         <TableCell>
           <Label

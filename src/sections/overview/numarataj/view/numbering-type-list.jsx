@@ -54,6 +54,7 @@ const TABLE_HEAD = [
   { id: 'insertedDate', label: 'Tarih', width: 100 },
   { id: 'mahalle', label: 'Mahalle', width: 100 },
   { id: 'caddeSokak', label: 'Cadde / Sokak', width: 100 },
+  { id: 'isVisible', label: 'Pdf için Tckn ve Telefon Görünsün', width: 100 },
   { id: 'isActive', label: 'Durum', width: 100 },
   { id: '', width: 88 },
 ];
@@ -61,6 +62,28 @@ const TABLE_HEAD = [
 // ----------------------------------------------------------------------
 
 export default function NumaratajTypeList({ type }) {
+  const getTableHead = (type) => {
+    const baseHead = [
+      { id: 'id', label: 'Belge No', width: 100 },
+      { id: 'tcKimlikNo', label: 'TC Kimlik No', width: 100 },
+      { id: 'adSoyad', label: 'Ad Soyad', width: 100 },
+      { id: 'telefon', label: 'Telefon', width: 100 },
+      { id: 'insertedDate', label: 'Tarih', width: 100 },
+      { id: 'mahalle', label: 'Mahalle', width: 100 },
+      { id: 'caddeSokak', label: 'Cadde / Sokak', width: 100 },
+      { id: 'isActive', label: 'Durum', width: 100 },
+      { id: '', width: 88 },
+    ];
+
+    if (type !== 2) {
+      baseHead.splice(7, 0, { id: 'isVisible', label: 'Pdf için Tckn ve Telefon Görünsün', width: 100 });
+    }
+
+    return baseHead;
+  };
+  
+  const TABLE_HEAD = getTableHead(type);
+  
   const table = useTable();
   const confirmDialog = useBoolean();
   
@@ -310,6 +333,7 @@ export default function NumaratajTypeList({ type }) {
                     <UseTableRow
                       key={row.id}
                       row={row}
+                      typeNum={type}
                       selected={table.selected.includes(row.id)}
                       onSelectRow={() => table.onSelectRow(row.id)}
                       onDeleteRow={() => handleDeleteRow(row.id)}

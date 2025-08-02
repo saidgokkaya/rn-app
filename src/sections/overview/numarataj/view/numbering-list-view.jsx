@@ -55,6 +55,7 @@ const TABLE_HEAD = [
   { id: 'insertedDate', label: 'Tarih', width: 100 },
   { id: 'mahalle', label: 'Mahalle', width: 100 },
   { id: 'caddeSokak', label: 'Cadde / Sokak', width: 100 },
+  { id: 'isVisible', label: 'Pdf için Tckn ve Telefon Görünsün', width: 100 },
   { id: 'isActive', label: 'Durum', width: 100 },
   { id: '', width: 88 },
 ];
