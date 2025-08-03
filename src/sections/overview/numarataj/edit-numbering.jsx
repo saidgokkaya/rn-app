@@ -266,15 +266,6 @@ export function NumberingForm({ data, id }) {
             </>
           )}
 
-          {numaratajType === NUMARATAJ.ADRES_TESPIT && (
-            <>
-              <Grid item xs={12} sm={5}>
-                <TextField label="Eski Adres" value={eskiAdres} onChange={(e) => setEskiAdres(e.target.value)} fullWidth />
-              </Grid>
-              <Grid item xs={12} sm={1}></Grid>
-            </>
-          )}
-
           {[NUMARATAJ.ADRES_TESPIT, NUMARATAJ.RESMI_KURUM, NUMARATAJ.SAHA_CALISMASI, NUMARATAJ.YENI_BINA, NUMARATAJ.OZEL_ISYERI].includes(numaratajType) && (
             <>
               <Grid item xs={12} sm={5}>
@@ -288,6 +279,15 @@ export function NumberingForm({ data, id }) {
             <>
               <Grid item xs={12} sm={5}>
                 <TextField label="Parsel" value={parsel} onChange={(e) => setParsel(e.target.value)} fullWidth inputProps={{ maxLength: 6 }} helperText={`${parsel.length}/6`}/>
+              </Grid>
+              <Grid item xs={12} sm={1}></Grid>
+            </>
+          )}
+
+          {[NUMARATAJ.ADRES_TESPIT, NUMARATAJ.OZEL_ISYERI].includes(numaratajType) && (
+            <>
+              <Grid item xs={12} sm={5}>
+                <TextField label="Eski Adres" value={eskiAdres} onChange={(e) => setEskiAdres(e.target.value)} fullWidth />
               </Grid>
               <Grid item xs={12} sm={1}></Grid>
             </>

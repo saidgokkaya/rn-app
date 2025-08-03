@@ -48,11 +48,11 @@ const NavConfigDashboard = () => {
     {
       subheader: 'HİZMETLER',
       items: filterItems([
-        {
-          title: 'Ruhsat',
-          path: paths.dashboard.permit.root,
-          icon: ICONS.permit
-        },
+        // {
+        //   title: 'Ruhsat',
+        //   path: paths.dashboard.permit.root,
+        //   icon: ICONS.permit
+        // },
         {
           title: 'Numarataj',
           path: paths.dashboard.numbering.root,
