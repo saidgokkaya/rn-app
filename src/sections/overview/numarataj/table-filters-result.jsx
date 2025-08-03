@@ -10,7 +10,8 @@ export function TableFiltersResult({ filters, onResetPage, totalResults, sx }) {
   const handleRemoveField = useCallback(
     (field) => {
       onResetPage();
-      updateFilters({ [field]: '' });
+      const resetValue = field === 'startDate' || field === 'endDate' ? null : '';
+      updateFilters({ [field]: resetValue });
     },
     [onResetPage, updateFilters]
   );
@@ -24,6 +25,15 @@ export function TableFiltersResult({ filters, onResetPage, totalResults, sx }) {
     onResetPage();
     resetFilters();
   }, [onResetPage, resetFilters]);
+
+  const formatDate = (date) => {
+    if (!date) return '';
+    try {
+      return new Date(date).toLocaleDateString('tr-TR');
+    } catch {
+      return '';
+    }
+  };
 
   return (
     <FiltersResult totalResults={totalResults} onReset={handleReset} sx={sx}>
@@ -88,6 +98,28 @@ export function TableFiltersResult({ filters, onResetPage, totalResults, sx }) {
           {...chipProps}
           label={currentFilters.caddeSokak}
           onDelete={() => handleRemoveField('caddeSokak')}
+        />
+      </FiltersBlock>
+
+      <FiltersBlock
+        label="Başlangıç Tarihi"
+        isShow={!!currentFilters.startDate}
+      >
+        <Chip
+          {...chipProps}
+          label={formatDate(currentFilters.startDate)}
+          onDelete={() => handleRemoveField('startDate')}
+        />
+      </FiltersBlock>
+
+      <FiltersBlock
+        label="Bitiş Tarihi"
+        isShow={!!currentFilters.endDate}
+      >
+        <Chip
+          {...chipProps}
+          label={formatDate(currentFilters.endDate)}
+          onDelete={() => handleRemoveField('endDate')}
         />
       </FiltersBlock>
     </FiltersResult>

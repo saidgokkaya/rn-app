@@ -3,6 +3,7 @@ import { usePopover } from 'minimal-shared/hooks';
 
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 export function TableToolbar({ filters, onResetPage }) {
   const menuActions = usePopover();
@@ -84,6 +85,20 @@ export function TableToolbar({ filters, onResetPage }) {
         value={currentFilters.caddeSokak}
         onChange={handleFilterChange('caddeSokak')}
         placeholder="Cadde Sokak"
+      />
+
+      <DatePicker
+        label="Başlangıç Tarihi"
+        value={currentFilters.startDate ?? null}
+        onChange={(newValue) => filters.setState({ startDate: newValue })}
+        renderInput={(params) => <TextField {...params} size="small" />}
+      />
+
+      <DatePicker
+        label="Bitiş Tarihi"
+        value={currentFilters.endDate ?? null}
+        onChange={(newValue) => filters.setState({ endDate: newValue })}
+        renderInput={(params) => <TextField {...params} size="small" />}
       />
     </Box>
   );

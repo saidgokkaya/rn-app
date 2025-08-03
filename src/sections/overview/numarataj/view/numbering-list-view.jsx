@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect } from 'react';
 import { varAlpha } from 'minimal-shared/utils';
+import dayjs from 'dayjs';
 import { useBoolean, useSetState } from 'minimal-shared/hooks';
 
 import { CONFIG } from 'src/global-config';
@@ -69,7 +70,7 @@ export function NumaratajListView() {
   const [tableData, setTableData] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const filters = useSetState({ id: '', numaratajType: '', tcKimlikNo: '', adSoyad: '', telefon: '', mahalle: '', caddeSokak: '', disKapi: '', icKapiNo: '', isActive: 'all' });
+  const filters = useSetState({ id: '', numaratajType: '', tcKimlikNo: '', adSoyad: '', telefon: '', mahalle: '', caddeSokak: '', disKapi: '', icKapiNo: '', startDate: null, endDate: null, isActive: 'all' });
   const { state: currentFilters, setState: updateFilters } = filters;
 
   useEffect(() => {
@@ -113,7 +114,9 @@ export function NumaratajListView() {
   !!currentFilters.mahalle ||
   !!currentFilters.caddeSokak ||
   !!currentFilters.disKapi ||
-  !!currentFilters.icKapiNo;
+  !!currentFilters.icKapiNo ||
+  !!currentFilters.startDate ||
+  !!currentFilters.endDate; 
 
   const notFound = (!dataFiltered.length && canReset) || !dataFiltered.length;
 
@@ -439,8 +442,8 @@ function applyFilter({ inputData, comparator, filters }) {
     telefon,
     mahalle,
     caddeSokak,
-    disKapi,
-    icKapiNo,
+    startDate,
+    endDate,
   } = filters;
 
   const stabilizedThis = inputData.map((el, index) => [el, index]);
@@ -500,6 +503,21 @@ function applyFilter({ inputData, comparator, filters }) {
     inputData = inputData.filter((item) =>
       trLower(item.caddeSokak).includes(trLower(caddeSokak))
     );
+  }
+
+  if (startDate) {
+    console.log('denee');
+    const start = dayjs(startDate).startOf('day');
+    inputData = inputData.filter((item) => {
+      return dayjs(item.insertedDate).isAfter(start) || dayjs(item.insertedDate).isSame(start);
+    });
+  }
+
+  if (endDate) {
+    const end = dayjs(endDate).endOf('day');
+    inputData = inputData.filter((item) => {
+      return dayjs(item.insertedDate).isBefore(end) || dayjs(item.insertedDate).isSame(end);
+    });
   }
 
   return inputData;

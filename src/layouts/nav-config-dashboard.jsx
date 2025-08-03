@@ -60,6 +60,7 @@ const NavConfigDashboard = () => {
           children: [
             { title: 'Ortak Alan', path: paths.dashboard.numbering.common_area },
             { title: 'Numarataj Alanları', path: paths.dashboard.numbering.areas },
+            { title: 'Rapor', path: paths.dashboard.numbering.report },
           ],
         },
       ]),
