@@ -61,7 +61,7 @@ export function ContactsPopover({ sx, ...other }) {
             <Badge>
               <Avatar 
                 alt={contact.name} 
-                src={`/user/${contact.id}.png`} 
+                src={`/user/${contact.photoUrl}`} 
                 onError={(e) => (e.target.src = '/default-avatar.png')} 
               >
                 {contact.name[0]?.toUpperCase()[0]}

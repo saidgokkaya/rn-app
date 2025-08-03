@@ -48,20 +48,22 @@ const NavConfigDashboard = () => {
     {
       subheader: 'HİZMETLER',
       items: filterItems([
-        // {
-        //   title: 'Ruhsat',
-        //   path: paths.dashboard.permit.root,
-        //   icon: ICONS.permit
-        // },
+        {
+          title: 'Ruhsat',
+          path: paths.dashboard.permit.root,
+          icon: ICONS.permit,
+          roles: ['Ruhsat','Admin']
+        },
         {
           title: 'Numarataj',
           path: paths.dashboard.numbering.root,
           icon: ICONS.numbering,
           children: [
-            { title: 'Ortak Alan', path: paths.dashboard.numbering.common_area },
-            { title: 'Numarataj Alanları', path: paths.dashboard.numbering.areas },
-            { title: 'Rapor', path: paths.dashboard.numbering.report },
+            { title: 'Ortak Alan', path: paths.dashboard.numbering.common_area, roles: ['Numarataj','Admin'] },
+            { title: 'Numarataj Alanları', path: paths.dashboard.numbering.areas, roles: ['Numarataj','Admin'] },
+            { title: 'Rapor', path: paths.dashboard.numbering.report, roles: ['Numarataj','Admin'] },
           ],
+          roles: ['Numarataj','Admin']
         },
       ]),
     },

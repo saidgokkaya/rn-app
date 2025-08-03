@@ -44,18 +44,6 @@ export const NewUserSchema = zod.object({
     phone: schemaHelper
       .phoneNumber({ isValid: isValidPhoneNumber })
       .refine((value) => value !== '+905000000000', { message: 'Bu telefon numarası kabul edilemez!' }),
-    title: zod
-      .string()
-      .min(1, { message: 'Ünvan zorunludur!' })
-      .refine((value) => value !== 'Ünvan', { message: 'Ünvan alanına gerçek bir değer giriniz!' }),
-    dateOfBirth: zod
-      .string()
-      .min(1, { message: 'Doğum Tarihi zorunludur!' }),
-    address: zod
-      .string()
-      .min(1, { message: 'Adres zorunludur!' })
-      .refine((value) => value !== 'Adres', { message: 'Adres alanına gerçek bir değer giriniz!' }),
-    gender: zod.enum(['E', 'K'], { message: 'Cinsiyet seçmek zorunludur!' }),
     roles: zod.array(zod.number()),
 });
 
@@ -63,13 +51,10 @@ export const NewUserSchema = zod.object({
 
 export function UserEditForm({ currentUser, userId }) {
   const router = useRouter();
-
+  
   const roles = [
-    { id: 5, name: "Meta Reklam Hesaplarını Görüntüleme" },
-    { id: 3, name: "Meta Reklam Hesaplarını Yönetme" },
-    { id: 6, name: "Google Reklam Hesaplarını Görüntüleme" },
-    { id: 4, name: "Google Reklam Hesaplarını Yönetme" },
-    { id: 7, name: "Görevleri Yönetme" },
+    { id: 5, name: "Ruhsat" },
+    { id: 6, name: "Numarataj" },
   ];
 
   const defaultValues = {
@@ -78,10 +63,6 @@ export function UserEditForm({ currentUser, userId }) {
     lastName: '',
     mail: '',
     phone: '',
-    title: '',
-    dateOfBirth: '',
-    address: '',
-    gender: '',
     roles: []
   };
 
@@ -134,10 +115,6 @@ export function UserEditForm({ currentUser, userId }) {
           lastName: data.lastName,
           mail: data.mail,
           phone: data.phone,
-          title: data.title,
-          dateOfBirth: data.dateOfBirth,
-          address: data.address,
-          gender: data.gender,
           roles: data.roles,
         })
       });
@@ -198,7 +175,7 @@ export function UserEditForm({ currentUser, userId }) {
                     }}
                   >
                     İzin verilen maksimum
-                    <br /> *.png boyutu: {fData(3145728)}
+                    <br /> *.png, *.jpg, *jpeg boyutu: {fData(3145728)}
                   </Typography>
                 }
               />
@@ -232,17 +209,6 @@ export function UserEditForm({ currentUser, userId }) {
                 <Field.Text name="lastName" label="Soyad" />
                 <Field.Text name="mail" label="E-Posta" />
                 <Field.Phone name="phone" label="Telefon" country='TR' />
-                <Field.Text name="title" label="Ünvan" />
-                <Field.DatePicker name="dateOfBirth" label="Doğum Tarihi" />
-                <Field.Text name="address" multiline rows={4} label="Adres" />
-                <Field.RadioGroup
-                    name="gender"
-                    label="Cinsiyet"
-                    options={[
-                    { value: 'E', label: 'Erkek' },
-                    { value: 'K', label: 'Kadın' },
-                    ]}
-                />
             </Box>
 
             <Stack sx={{ mt: 3, alignItems: 'flex-end' }}>

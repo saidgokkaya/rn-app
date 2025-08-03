@@ -87,7 +87,7 @@ export function AccountUserGeneral() {
 
         const userData = await response.json();
         const imageSrc = await Promise.any([
-          fetchImage(`/user/${userId}.png`)
+          fetchImage(`/user/${userData.photoUrl}`)
         ]);
 
         setCurrentUser({

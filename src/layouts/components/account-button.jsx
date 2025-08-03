@@ -13,27 +13,9 @@ import { varTap, varHover, AnimateBorder, transitionTap } from 'src/components/a
 
 export function AccountButton({ photoURL, displayName, sx, ...other }) {
   const [user, setUser] = useState(null);
+  const [imageSrc, setImageSrc] = useState('');
 
   const token = localStorage.getItem('jwt_access_token');
-  let decoded = null;
-
-  if (token) {
-    try {
-      decoded = jwtDecode(token);
-    } catch (error) {
-      window.location.href = '/login';
-    }
-  }
-
-  const userId = decoded ? decoded.userId : null;
-
-  const imageSrc = [
-    `/user/${userId}.png`,
-  ].find((src) => {
-    const img = new Image();
-    img.src = src;
-    return img.complete;
-  }) || user?.firstName?.charAt(0)?.toUpperCase();
   
   useEffect(() => {
     const fetchUserData = async () => {
@@ -48,6 +30,7 @@ export function AccountButton({ photoURL, displayName, sx, ...other }) {
         if (response.ok) {
           const data = await response.json();
           setUser(data);
+          setImageSrc(`/user/${data.photoUrl}`);
         } else {
           console.error('API hatası:', response.status);
         }
