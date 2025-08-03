@@ -44,6 +44,7 @@ export const paths = {
       neighbourhood: `${ROOTS.DASHBOARD}/numbering/neighbourhood`,
       new: `${ROOTS.DASHBOARD}/numbering/new`,
       edit: (id) => `${ROOTS.DASHBOARD}/numbering/${id}/edit`,
+      report: `${ROOTS.DASHBOARD}/numbering/report`,
     },
     log: `${ROOTS.DASHBOARD}/log`,
     user: {

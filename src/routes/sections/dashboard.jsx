@@ -37,6 +37,7 @@ const AreasPage = lazy(() => import('src/pages/numarataj/areas'));
 const NeighbourhoodPage = lazy(() => import('src/pages/numarataj/neighbourhood'));
 const NewNumberingPage = lazy(() => import('src/pages/numarataj/new'));
 const EditNumberingPage = lazy(() => import('src/pages/numarataj/edit'));
+const NumReportPage = lazy(() => import('src/pages/numarataj/report'));
 const LogPage = lazy(() => import('src/pages/log'));
 
 // ----------------------------------------------------------------------
@@ -101,6 +102,7 @@ export const dashboardRoutes = [
           { path: 'neighbourhood', element: (<NeighbourhoodPage />) },
           { path: 'new', element: (<NewNumberingPage />) },
           { path: ':id/edit', element: (<EditNumberingPage />) },
+          { path: 'report', element: (<NumReportPage />) },
         ],
       },
       { path: 'log', element: (<RoleGuard allowedRoles={['Admin']}><LogPage /></RoleGuard>) },

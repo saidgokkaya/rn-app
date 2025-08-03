@@ -49,6 +49,14 @@ export function AreasView() {
           <>
             <Button
               component={RouterLink}
+              href={paths.dashboard.numbering.report}
+              variant="contained"
+              startIcon={<Iconify icon="mynaui:chart-graph-solid" />}
+            >
+              Rapor
+            </Button>
+            <Button
+              component={RouterLink}
               href={paths.dashboard.numbering.neighbourhood}
               variant="contained"
               startIcon={<Iconify icon="mingcute:add-line" />}
