@@ -212,6 +212,37 @@ export function NumaratajListView() {
     />
   );
 
+  const handleExportExcel = async () => {
+    try {
+      const token = localStorage.getItem('jwt_access_token');
+      const ids = dataFiltered.map((row) => row.id);
+
+      const response = await fetch(`${CONFIG.apiUrl}/Numarataj/export-excel`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ numberingIds: ids }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Excel indirme başarısız');
+      }
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'numarataj.xlsx');
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (error) {
+      toast.error(error.message || 'Excel indirme sırasında hata oluştu');
+    }
+  };
+
   return (
     <>
       <DashboardContent>
@@ -281,6 +312,14 @@ export function NumaratajListView() {
                 }
               />
             ))}
+
+            <Button
+              startIcon={<Iconify icon="material-symbols:download" />}
+              onClick={handleExportExcel}
+              sx={{ ml: 'auto', mr: 2 }}
+            >
+              Excel İndir
+            </Button>
           </Tabs>
 
           <TableToolbar
