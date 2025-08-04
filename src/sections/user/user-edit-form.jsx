@@ -52,10 +52,7 @@ export const NewUserSchema = zod.object({
 export function UserEditForm({ currentUser, userId }) {
   const router = useRouter();
   
-  const roles = [
-    { id: 5, name: "Ruhsat" },
-    { id: 6, name: "Numarataj" },
-  ];
+  const [roles, setRoles] = useState([]);
 
   const defaultValues = {
     photoURL: '',
@@ -65,6 +62,31 @@ export function UserEditForm({ currentUser, userId }) {
     phone: '',
     roles: []
   };
+
+  useEffect(() => {
+    const fetchRoles = async () => {
+      try {
+        const token = localStorage.getItem('jwt_access_token');
+        const res = await fetch(`${CONFIG.apiUrl}/Organization/roles`, {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (!res.ok) throw new Error('Roller alınamadı!');
+
+        const rolesData = await res.json();
+        setRoles(rolesData);
+      } catch (error) {
+        toast.error('Roller alınırken bir hata oluştu!');
+        console.error(error);
+      }
+    };
+
+    fetchRoles();
+  }, []);
 
   const methods = useForm({
     mode: 'onSubmit',

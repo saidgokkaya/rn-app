@@ -2,6 +2,7 @@ import { paths } from 'src/routes/paths';
 import { useState, useEffect } from 'react';
 
 import { CONFIG } from 'src/global-config';
+import axios from 'axios';
 
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
@@ -14,7 +15,16 @@ const NavConfigDashboard = () => {
   let roles = [];
   roles = JSON.parse(rolesString) || [];
 
-  const icon = (name) => <SvgColor src={`${CONFIG.assetsDir}/assets/icons/navbar/${name}.svg`} />;
+  const [permissions, setPermissions] = useState({
+    ruhsatView: false,
+    numaratajView: false,
+  });
+
+  const [loading, setLoading] = useState(true);
+
+  const icon = (name) => (
+    <SvgColor src={`${CONFIG.assetsDir}/assets/icons/navbar/${name}.svg`} />
+  );
 
   const ICONS = {
     dashboard: icon('ic-dashboard'),
@@ -24,25 +34,60 @@ const NavConfigDashboard = () => {
     log: icon('ic-log'),
   };
 
-  // ----------------------------------------------------------------------
+  useEffect(() => {
+    const fetchPermissions = async () => {
+      try {
+        const token = localStorage.getItem('jwt_access_token');
+        const res = await axios.get(`${CONFIG.apiUrl}/Organization/settings`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        setPermissions({
+          ruhsatView: res.data?.ruhsatView ?? false,
+          numaratajView: res.data?.numaratajView ?? false,
+        });
+      } catch (error) {
+        console.error('İzinler alınamadı:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPermissions();
+  }, []);
 
   const filterItems = (items) =>
-  items
-    .filter((item) => {
-      if (item.roles && !item.roles.some((role) => roles.includes(role))) {
-        return false;
-      }
-      return true;
-    })
-    .map((item) =>
-      item.children ? { ...item, children: filterItems(item.children) } : item
-    );
+    items
+      .filter((item) => {
+        if (item.roles && !item.roles.some((role) => roles.includes(role))) {
+          return false;
+        }
+
+        if (item.permissionKey && !permissions[item.permissionKey]) {
+          return false;
+        }
+
+        return true;
+      })
+      .map((item) =>
+        item.children
+          ? { ...item, children: filterItems(item.children) }
+          : item
+      );
+
+  if (loading) return [];
 
   const navData = [
     {
       subheader: 'GENEL BAKIŞ',
       items: filterItems([
-        { title: 'Başlangıç', path: paths.dashboard.root, icon: ICONS.dashboard },
+        {
+          title: 'Başlangıç',
+          path: paths.dashboard.root,
+          icon: ICONS.dashboard,
+        },
       ]),
     },
     {
@@ -52,18 +97,32 @@ const NavConfigDashboard = () => {
           title: 'Ruhsat',
           path: paths.dashboard.permit.root,
           icon: ICONS.permit,
-          roles: ['Ruhsat','Admin']
+          roles: ['Ruhsat', 'Admin'],
+          permissionKey: 'ruhsatView',
         },
         {
           title: 'Numarataj',
           path: paths.dashboard.numbering.root,
           icon: ICONS.numbering,
+          permissionKey: 'numaratajView',
+          roles: ['Numarataj', 'Admin'],
           children: [
-            { title: 'Ortak Alan', path: paths.dashboard.numbering.common_area, roles: ['Numarataj','Admin'] },
-            { title: 'Numarataj Alanları', path: paths.dashboard.numbering.areas, roles: ['Numarataj','Admin'] },
-            { title: 'Rapor', path: paths.dashboard.numbering.report, roles: ['Numarataj','Admin'] },
+            {
+              title: 'Ortak Alan',
+              path: paths.dashboard.numbering.common_area,
+              roles: ['Numarataj', 'Admin'],
+            },
+            {
+              title: 'Numarataj Alanları',
+              path: paths.dashboard.numbering.areas,
+              roles: ['Numarataj', 'Admin'],
+            },
+            {
+              title: 'Rapor',
+              path: paths.dashboard.numbering.report,
+              roles: ['Numarataj', 'Admin'],
+            },
           ],
-          roles: ['Numarataj','Admin']
         },
       ]),
     },
@@ -76,10 +135,19 @@ const NavConfigDashboard = () => {
           icon: ICONS.organization,
           children: [
             { title: 'Hesap', path: paths.dashboard.user.account },
-            { title: 'Kullanıcılar', path: paths.dashboard.user.list, roles: ['Admin'] },
+            {
+              title: 'Kullanıcılar',
+              path: paths.dashboard.user.list,
+              roles: ['Admin'],
+            },
           ],
         },
-        { title: 'Log', path: paths.dashboard.log, icon: ICONS.log, roles: ['Admin'] },
+        {
+          title: 'Log',
+          path: paths.dashboard.log,
+          icon: ICONS.log,
+          roles: ['Admin'],
+        },
       ]),
     },
   ];

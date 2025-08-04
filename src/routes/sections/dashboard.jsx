@@ -11,6 +11,7 @@ import { AccountLayout } from 'src/sections/account/account-layout';
 import { AuthGuard } from 'src/auth/guard';
 
 import RoleGuard from '../guards/role-guard';
+import PermissionGuard from '../guards/permission';
 
 // ----------------------------------------------------------------------
 
@@ -84,24 +85,24 @@ export const dashboardRoutes = [
       {
         path: 'permit',
         children: [
-          { index: true, element: (<RoleGuard allowedRoles={['Admin', 'Ruhsat']}><PermitPage /></RoleGuard>) },
-          { path: 'new', element: (<RoleGuard allowedRoles={['Admin', 'Ruhsat']}><NewPermitPage /></RoleGuard>) },
-          { path: ':id/edit', element: (<RoleGuard allowedRoles={['Admin', 'Ruhsat']}><EditPermitPage /></RoleGuard>) },
-          { path: 'activity', element: (<RoleGuard allowedRoles={['Admin', 'Ruhsat']}><ActivityPage /></RoleGuard>) },
-          { path: 'warehouse', element: (<RoleGuard allowedRoles={['Admin', 'Ruhsat']}><WareHousePage /></RoleGuard>) },
-          { path: 'class', element: (<RoleGuard allowedRoles={['Admin', 'Ruhsat']}><ClassPage /></RoleGuard>) },
+          { index: true, element: (<PermissionGuard permissionKey="ruhsatView"><RoleGuard allowedRoles={['Admin', 'Ruhsat']}><PermitPage /></RoleGuard></PermissionGuard>) },
+          { path: 'new', element: (<PermissionGuard permissionKey="ruhsatView"><RoleGuard allowedRoles={['Admin', 'Ruhsat']}><NewPermitPage /></RoleGuard></PermissionGuard>) },
+          { path: ':id/edit', element: (<PermissionGuard permissionKey="ruhsatView"><RoleGuard allowedRoles={['Admin', 'Ruhsat']}><EditPermitPage /></RoleGuard></PermissionGuard>) },
+          { path: 'activity', element: (<PermissionGuard permissionKey="ruhsatView"><RoleGuard allowedRoles={['Admin', 'Ruhsat']}><ActivityPage /></RoleGuard></PermissionGuard>) },
+          { path: 'warehouse', element: (<PermissionGuard permissionKey="ruhsatView"><RoleGuard allowedRoles={['Admin', 'Ruhsat']}><WareHousePage /></RoleGuard></PermissionGuard>) },
+          { path: 'class', element: (<PermissionGuard permissionKey="ruhsatView"><RoleGuard allowedRoles={['Admin', 'Ruhsat']}><ClassPage /></RoleGuard></PermissionGuard>) },
         ],
       },
       {
         path: 'numbering',
         children: [
-          { index: true, element: (<RoleGuard allowedRoles={['Admin', 'Numarataj']}><NumaratajPage /></RoleGuard>) },
-          { path: 'common-areas', element: (<RoleGuard allowedRoles={['Admin', 'Numarataj']}><NumaratajPage /></RoleGuard>) },
-          { path: 'areas', element: (<RoleGuard allowedRoles={['Admin', 'Numarataj']}><AreasPage /></RoleGuard>) },
-          { path: 'neighbourhood', element: (<RoleGuard allowedRoles={['Admin', 'Numarataj']}><NeighbourhoodPage /></RoleGuard>) },
-          { path: 'new', element: (<RoleGuard allowedRoles={['Admin', 'Numarataj']}><NewNumberingPage /></RoleGuard>) },
-          { path: ':id/edit', element: (<RoleGuard allowedRoles={['Admin', 'Numarataj']}><EditNumberingPage /></RoleGuard>) },
-          { path: 'report', element: (<RoleGuard allowedRoles={['Admin', 'Numarataj']}><NumReportPage /></RoleGuard>) },
+          { index: true, element: (<PermissionGuard permissionKey="numaratajView"><RoleGuard allowedRoles={['Admin', 'Numarataj']}><NumaratajPage /></RoleGuard></PermissionGuard>) },
+          { path: 'common-areas', element: (<PermissionGuard permissionKey="numaratajView"><RoleGuard allowedRoles={['Admin', 'Numarataj']}><NumaratajPage /></RoleGuard></PermissionGuard>) },
+          { path: 'areas', element: (<PermissionGuard permissionKey="numaratajView"><RoleGuard allowedRoles={['Admin', 'Numarataj']}><AreasPage /></RoleGuard></PermissionGuard>) },
+          { path: 'neighbourhood', element: (<PermissionGuard permissionKey="numaratajView"><RoleGuard allowedRoles={['Admin', 'Numarataj']}><NeighbourhoodPage /></RoleGuard></PermissionGuard>) },
+          { path: 'new', element: (<PermissionGuard permissionKey="numaratajView"><RoleGuard allowedRoles={['Admin', 'Numarataj']}><NewNumberingPage /></RoleGuard></PermissionGuard>) },
+          { path: ':id/edit', element: (<PermissionGuard permissionKey="numaratajView"><RoleGuard allowedRoles={['Admin', 'Numarataj']}><EditNumberingPage /></RoleGuard></PermissionGuard>) },
+          { path: 'report', element: (<PermissionGuard permissionKey="numaratajView"><RoleGuard allowedRoles={['Admin', 'Numarataj']}><NumReportPage /></RoleGuard></PermissionGuard>) },
         ],
       },
       { path: 'log', element: (<RoleGuard allowedRoles={['Admin']}><LogPage /></RoleGuard>) },

@@ -51,10 +51,7 @@ export const NewUserSchema = zod.object({
 // ----------------------------------------------------------------------
 
 export function UserNewEditForm() {
-  const roles = [
-    { id: 5, name: "Ruhsat" },
-    { id: 6, name: "Numarataj" },
-  ];
+  const [roles, setRoles] = useState([]);
 
   const [currentUser, setCurrentUser] = useState({
       photoURL: '',
@@ -78,15 +75,29 @@ export function UserNewEditForm() {
     const fetchUserData = async () => {
       try {
         const token = localStorage.getItem('jwt_access_token');
-        const userResponse = await fetch(`${CONFIG.apiUrl}/Organization/get-add-user`, {
-          method: 'GET',
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-        });
-        const userData = await userResponse.json();
+
+        const [userRes, rolesRes] = await Promise.all([
+          fetch(`${CONFIG.apiUrl}/Organization/get-add-user`, {
+            method: 'GET',
+            headers: {
+              Authorization: `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
+          }),
+          fetch(`${CONFIG.apiUrl}/Organization/roles`, {
+            method: 'GET',
+            headers: {
+              Authorization: `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
+          }),
+        ]);
+
+        const userData = await userRes.json();
+        const rolesData = await rolesRes.json();
+
         setCurrentUser(userData);
+        setRoles(rolesData);
       } catch (error) {
         toast.error('Veri alınırken bir hata oluştu');
       }
