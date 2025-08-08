@@ -58,8 +58,8 @@ export function AccountButton({ photoURL, displayName, sx, ...other }) {
           secondaryBorder: { sx: { color: 'warning.main' } },
         }}
       >
-        <Avatar src={imageSrc} alt={imageSrc} sx={{ width: 1, height: 1 }}>
-          {imageSrc}
+        <Avatar src={imageSrc || undefined} alt={user ? `${user.firstName.charAt(0).toUpperCase()}` : ''} sx={{ width: 1, height: 1 }}>
+          {(!imageSrc && user?.firstName) ? user.firstName.charAt(0).toUpperCase() : ''}
         </Avatar>
       </AnimateBorder>
     </IconButton>

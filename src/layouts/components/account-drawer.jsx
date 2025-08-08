@@ -75,8 +75,8 @@ export function AccountDrawer({ data = [], sx, ...other }) {
         primaryBorder: { size: 120, sx: { color: 'primary.main' } },
       }}
     >
-      <Avatar src={imageSrc} alt={imageSrc} sx={{ width: 1, height: 1 }}>
-        {imageSrc}
+      <Avatar src={imageSrc || undefined} alt={user ? `${user.firstName.charAt(0).toUpperCase()}` : ''} sx={{ width: 1, height: 1 }}>
+        {(!imageSrc && user?.firstName) ? user.firstName.charAt(0).toUpperCase() : ''}
       </Avatar>
     </AnimateBorder>
   );
