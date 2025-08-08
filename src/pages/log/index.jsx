@@ -1,10 +1,10 @@
 import { Helmet } from 'react-helmet-async';
 
-import { OverviewAppView } from 'src/sections/overview/app/view';
+import { LogListView } from 'src/sections/log/view';
 
 // ----------------------------------------------------------------------
 
-const metadata = { title: `Log` };
+const metadata = { title: `Log Kayıtları` };
 
 export default function OverviewAppPage() {
   return (
@@ -13,7 +13,7 @@ export default function OverviewAppPage() {
         <title> {metadata.title}</title>
       </Helmet>
 
-      <OverviewAppView />
+      <LogListView />
     </>
   );
 }
