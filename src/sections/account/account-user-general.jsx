@@ -210,7 +210,7 @@ export function AccountUserGeneral() {
                     }}
                   >
                     İzin verilen maksimum
-                    <br /> *.png boyutu: {fData(3145728)}
+                    <br /> *.png, *.jpg, *jpeg boyutu: {fData(3145728)}
                   </Typography>
                 }
               />
