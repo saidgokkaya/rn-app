@@ -250,6 +250,7 @@ export function PermitForm() {
       toast.error('Kaydedilirken bir hata oluştu');
     } finally {
       setLoading(false);
+      navigate('/dashboard/permit');
     }
   };
 

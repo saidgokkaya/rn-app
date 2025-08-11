@@ -68,6 +68,34 @@ export function UseTableRow({ row, selected, editHref, onSelectRow, onDeleteRow,
     }
   };
 
+  const handleDownloadParafCertificate = async () => {
+    const token = localStorage.getItem('jwt_access_token');
+
+    try {
+      const res = await fetch(`${CONFIG.apiUrl}/Ruhsat/download-certificate-paraf?id=${row.id}`, {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+
+      const printWindow = window.open(url);
+      if (printWindow) {
+        printWindow.onload = function () {
+          printWindow.focus();
+          printWindow.print();
+        };
+      } else {
+        toast.error('Yazdırma penceresi açılamadı.');
+      }
+    } catch (err) {
+      toast.error('PDF indirilemedi.');
+    }
+  };
+
   async function handleDeleteScannedFile() {
     const token = localStorage.getItem('jwt_access_token');
 
@@ -182,6 +210,15 @@ export function UseTableRow({ row, selected, editHref, onSelectRow, onDeleteRow,
           }}>
             <Iconify icon="material-symbols:download-rounded" />
             İndir
+          </MenuItem>
+        </li>
+        <li>
+          <MenuItem onClick={() => {
+            handleDownloadParafCertificate();
+            menuActions.onClose();
+          }}>
+            <Iconify icon="material-symbols:download-rounded" />
+            Paraf
           </MenuItem>
         </li>
         <li>
