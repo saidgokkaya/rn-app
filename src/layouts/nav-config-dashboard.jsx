@@ -134,10 +134,17 @@ const NavConfigDashboard = () => {
           path: paths.dashboard.user.root,
           icon: ICONS.organization,
           children: [
-            { title: 'Hesap', path: paths.dashboard.user.account },
+            { title: 'Hesap', icon: <Iconify icon="mdi:account-cog-outline" />, path: paths.dashboard.user.account },
             {
               title: 'Kullanıcılar',
+              icon: <Iconify icon="flowbite:users-outline" />,
               path: paths.dashboard.user.list,
+              roles: ['Admin'],
+            },
+            {
+              title: 'Pdf Şablonu',
+              icon: <Iconify icon="hugeicons:pdf-02" />,
+              path: paths.dashboard.user.pdf_format,
               roles: ['Admin'],
             },
           ],

@@ -26,6 +26,9 @@ const AccountGeneralPage = lazy(() => import('src/pages/dashboard/user/account/g
 const AccountChangePasswordPage = lazy(
   () => import('src/pages/dashboard/user/account/change-password')
 );
+const AccountPdfFormatPage = lazy(
+  () => import('src/pages/dashboard/user/account/pdf-selected')
+);
 //App
 const PermitPage = lazy(() => import('src/pages/ruhsat'));
 const NewPermitPage = lazy(() => import('src/pages/ruhsat/new'));
@@ -72,6 +75,7 @@ export const dashboardRoutes = [
           { path: 'list', element: (<RoleGuard allowedRoles={['Admin']}><UserListPage /></RoleGuard>) },
           { path: 'new', element: (<RoleGuard allowedRoles={['Admin']}><UserCreatePage /></RoleGuard>) },
           { path: ':id/edit', element: (<RoleGuard allowedRoles={['Admin']}><UserEditPage /></RoleGuard>) },
+          { path: 'pdf-format', element: (<RoleGuard allowedRoles={['Admin']}><AccountPdfFormatPage /></RoleGuard>) },
           {
             path: 'account',
             element: accountLayout(),

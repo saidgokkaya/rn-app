@@ -52,6 +52,7 @@ export const paths = {
       new: `${ROOTS.DASHBOARD}/user/new`,
       list: `${ROOTS.DASHBOARD}/user/list`,
       account: `${ROOTS.DASHBOARD}/user/account`,
+      pdf_format: `${ROOTS.DASHBOARD}/user/pdf-format`,
       edit: (id) => `${ROOTS.DASHBOARD}/user/${id}/edit`,
     },
   },
